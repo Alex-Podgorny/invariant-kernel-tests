@@ -1,6 +1,12 @@
+source("R/check_environment.R")
+check_environment()
+
 args0 <- commandArgs(trailingOnly=FALSE); ff <- sub("^--file=","",args0[grep("^--file=",args0)]); root <- if(length(ff)) normalizePath(file.path(dirname(ff[1]),"..")) else normalizePath(".")
+
 source(file.path(root,"R","runner_utils.R")); source_project(root); require_torch()
+
 shared <- make_shared_cfg(); validate_shared_cfg(shared); cfg <- make_translation_cfg(shared)
+
 outdir <- Sys.getenv("OUTDIR",unset=file.path(root,"results","translation")); dir.create(outdir,recursive=TRUE,showWarnings=FALSE)
 
 run_rep <- function(scenario,delta,rep_id) {

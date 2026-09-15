@@ -1,4 +1,104 @@
-# Final invariant-kernel simulations
+## Installation
+
+The reference implementation used for the simulations in the paper runs on CPU.
+
+Clone the repository and open the project root in R.
+
+First, install `renv` if needed:
+
+```r
+install.packages("renv")
+```
+
+Then restore the project environment and install the Torch backend:
+
+```r
+source("setup.R")
+```
+
+This will:
+
+* restore the exact R package versions recorded in `renv.lock`;
+* check the R `torch` package;
+* install the required LibTorch/LibLantern backend if needed;
+* use the CPU backend as the reference configuration.
+
+You can verify that Torch is correctly installed with:
+
+```r
+torch::torch_is_installed(recheck = TRUE)
+```
+
+A successful installation should return:
+
+```r
+TRUE
+```
+
+## Running the simulations
+
+From the project root, the three simulation experiments can be run with:
+
+```r
+source("run/run_translation.R")
+source("run/run_circular.R")
+source("run/run_affine.R")
+```
+
+The default configuration is defined in the project configuration files. Simulation settings can also be overridden through environment variables before running a script.
+
+For example, a small smoke test can be run with:
+
+```r
+Sys.setenv(
+  QUICK = "1",
+  NREP = "1",
+  BPERM = "19",
+  S_GRID = "4",
+  DELTAS = "0",
+  SCENARIOS = "M1",
+  CORES = "1"
+)
+
+source("run/run_translation.R")
+```
+
+To return to the default configuration afterwards:
+
+```r
+Sys.unsetenv(c(
+  "QUICK",
+  "NREP",
+  "BPERM",
+  "S_GRID",
+  "DELTAS",
+  "SCENARIOS",
+  "CORES"
+))
+```
+
+## Generating the figures
+
+After the translation, circular and affine simulations have been run, the figures used in the paper can be generated with:
+
+```r
+source("analysis/make_final_results_figures.R")
+```
+
+By default, runtime figures use median computation times to reduce sensitivity to occasional system-level timing outliers.
+
+To use mean runtimes instead:
+
+```r
+Sys.setenv(RUNTIME_STAT = "mean")
+source("analysis/make_final_results_figures.R")
+```
+
+
+
+
+
+# Invariant-kernel simulations
 
 Clean implementation of the final simulation study for three nuisance groups:
 

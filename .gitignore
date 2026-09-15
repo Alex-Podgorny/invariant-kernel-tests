@@ -1,0 +1,19 @@
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# renv
+renv/library/
+renv/staging/
+renv/python/
+
+# simulation outputs
+results/**/*.rds
+results/**/raw/
+
+# logs / temporary files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

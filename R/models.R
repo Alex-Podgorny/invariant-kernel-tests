@@ -17,10 +17,6 @@ make_aperiodic_templates <- function(cfg) {
   list(m1 = list(m1_1, m1_2, m1_3), m2 = list(m2_1, m2_2))
 }
 
-M3_POS <- c(-2, -1, -0.2, 1, 2)
-M3_SD <- rep(0.2, 5)
-M3_BASE_AMP <- c(1, 0.3, 1.5, 0.3, 1)
-
 sample_m1_class <- function(n, group, delta, cfg) {
   # This is the normalized version of the historical c(.4,.3,.2) weights.
   # Writing it explicitly avoids relying on sample()'s implicit normalization.
@@ -45,11 +41,12 @@ draw_m2_coefficients <- function(n, group, delta, cfg) {
 }
 
 draw_m3_amplitudes <- function(n, group, delta, cfg) {
+  K <- length(cfg$m3_base_amp)
   L <- matrix(
-    rlnorm(n * length(M3_BASE_AMP), meanlog = -0.5 * cfg$m3_peak_sdlog^2, sdlog = cfg$m3_peak_sdlog),
-    nrow = n, ncol = length(M3_BASE_AMP)
+    rlnorm(n * K, meanlog = -0.5 * cfg$m3_peak_sdlog^2, sdlog = cfg$m3_peak_sdlog),
+    nrow = n, ncol = K
   )
-  A <- sweep(L, 2, M3_BASE_AMP, "*")
+  A <- sweep(L, 2, cfg$m3_base_amp, "*")
   if (group == "Y") A[, 4] <- A[, 4] * (1 + cfg$m3_peak_effect * delta)
   A
 }
@@ -105,7 +102,7 @@ generate_intrinsic_line <- function(t, scenario, delta, group, cfg, templates = 
   } else if (scenario == SCENARIOS[["M3"]]) {
     A <- draw_m3_amplitudes(1L, group, delta, cfg)
     z <- numeric(length(t))
-    for (k in seq_along(M3_POS)) z <- z + A[1, k] * .gauss(t, M3_POS[k], M3_SD[k])
+    for (k in seq_along(cfg$m3_positions)) z <- z + A[1, k] * .gauss(t, cfg$m3_positions[k], cfg$m3_sds[k])
     gamma <- rlnorm(1L, -0.5 * cfg$sigma_gamma_common^2, cfg$sigma_gamma_common)
     z <- gamma * z
   } else if (scenario == SCENARIOS[["M4"]]) {
@@ -172,7 +169,7 @@ generate_intrinsic_circle <- function(scenario, delta, group, cfg, templates) {
   } else if (scenario == SCENARIOS[["M3"]]) {
     A <- draw_m3_amplitudes(1L, group, delta, cfg)
     z <- numeric(cfg$p)
-    for (k in seq_along(M3_POS)) z <- z + A[1, k] * periodic_gauss(cfg$u, M3_POS[k], M3_SD[k])
+    for (k in seq_along(cfg$m3_positions)) z <- z + A[1, k] * periodic_gauss(cfg$u, cfg$m3_positions[k], cfg$m3_sds[k])
     z <- rlnorm(1L, -0.5 * cfg$sigma_gamma_common^2, cfg$sigma_gamma_common) * z
   } else if (scenario == SCENARIOS[["M4"]]) {
     d <- if (group == "X") cfg$m4_halfsep0 - cfg$m4_halfsep_effect * delta else cfg$m4_halfsep0 + cfg$m4_halfsep_effect * delta

@@ -7,8 +7,8 @@ make_circular_cfg <- function(shared) {
   cfg$dt <- cfg$period / cfg$p
   cfg$t <- (0:(cfg$p - 1L)) * cfg$dt
   cfg$u <- ((0:(cfg$p - 1L) + cfg$p %/% 2L) %% cfg$p - cfg$p %/% 2L) * cfg$dt
-  cfg$phase_gap <- env_num("PHASE_GAP", 1.0)
-  cfg$sigma_phase <- env_num("SIGMA_PHASE", 0.8)
+  cfg$phase_gap <- cfg$shift_gap
+  cfg$sigma_phase <- cfg$sigma_shift
   cfg$cnn_channels <- env_int("CNN_CHANNELS", 8L)
   cfg$cnn_k <- c(11L, 7L, 5L)
   cfg$cnn_dilation <- c(1L, 4L, 8L)

@@ -127,14 +127,30 @@ The code intentionally contains only the four final intrinsic alternatives and o
 - `delta = 0,.2,.4,.6,.8,1`;
 - learned split: 20 train + 40 test observations per group;
 - non-learned competitors: all 60 observations per group;
-- multiplicative noise `N(1,0.2^2)` before the nuisance transformation;
+- multiplicative noise `N(1,0.5^2)` before the nuisance transformation;
 - test RFF dimension = training RFF dimension = 256;
 - `S = 4,8,16,32`;
-- 200 permutations, alpha = .05;
+- 500 permutations, alpha = .05;
 - Adam, batch size 20/group, exactly 30 epochs, learning rate .01, weight decay 1e-4;
 - no early stopping, no monitoring subset, no per-replication diagnostics;
 - no equivariance safeguard/penalty;
 - spectral caps `(5,5,5)` after every optimizer step.
+
+## Shared nuisance parameters
+
+The location-type nuisance is controlled by the same two parameters in all three experiments:
+
+- `SHIFT_GAP = 0.5`: difference between the X and Y nuisance means;
+- `SIGMA_SHIFT = 0.8`: nuisance standard deviation within each group.
+
+These values are used for the aperiodic translation on `R`, the circular phase shift on `S^1`, and the translation coordinate `b` of `Aff^+(1)`. The affine translation is truncated to the interval `[-1.6,1.6]`.
+
+The affine scale coordinate has two additional shared-configuration parameters:
+
+- `ALPHA_GAP = 0.1`;
+- `ALPHA_SD = 0.1`.
+
+The affine log-scale nuisance is truncated to `[-0.4,0.4]`.
 
 ## Rounded intrinsic parameters
 
@@ -142,7 +158,7 @@ The same values are used in all three group experiments. The periodic case only 
 
 - M1: normalized uni/bi/trimodal templates with widths `0.5`, `0.4`, `0.3`, locations `0`, `+-1`, `+-1.5`, and central trimodal amplitude `0.8`. Historical weights `(.4,.3,.2)` are written explicitly as `(4,3,2)/9`, so the actual distribution is unambiguous.
 - M2: two separately L2-normalized Gaussians centered at `+-1.5`, both with sd `0.5`; coefficient sd `.25`; correlations `+-.8 delta`.
-- M3: locations `(-2,-1,-.2,1,2)`, all widths `.2`, baseline amplitudes `(1,.5,1.5,.5,1)`, fourth-peak effect `.5 delta`.
+- M3: locations `(-2,-1,-.2,1,2)`, all widths `.2`, baseline amplitudes `(1,.3,1.5,.3,1)`, fourth-peak effect `.5 delta`, and multiplicative peak log-sd `.2`.
 - M4: three distractors; minimum spacing/guard `.5`; distractor amplitude log-sd `.2`, widths `U(.15,.30)`; motif amplitude `.5` with log-sd `.15`; motif peak width `.1`; half-separation `.20 +- .10 delta`.
 
 ## Translation boundary ablations

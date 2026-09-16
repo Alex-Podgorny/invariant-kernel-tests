@@ -38,8 +38,12 @@ make_shared_cfg <- function() {
     S_grid = as.integer(parse_num_vec(Sys.getenv("S_GRID", unset = ""), c(4, 8, 16, 32))),
     Bperm = if (quick) env_int("BPERM", 49L) else env_int("BPERM", 500L),
     alpha_test = env_num("ALPHA", 0.05),
-    shift_gap = env_num("SHIFT_GAP", 0.5), #For R and S1
-    sigma_shift = env_num("SIGMA_SHIFT", 0.8), #For R and S1
+    # Shared location nuisance for R, S^1, and the b-coordinate of Aff^+(1).
+    shift_gap = env_num("SHIFT_GAP", 0.5),
+    sigma_shift = env_num("SIGMA_SHIFT", 0.8),
+    # Additional log-scale nuisance for Aff^+(1).
+    alpha_gap = env_num("ALPHA_GAP", 0.1),
+    alpha_sd = env_num("ALPHA_SD", 0.1),
     rff_dim = if (quick) env_int("RFF_DIM", 128L) else env_int("RFF_DIM", 256L),
     rff_train_dim = if (quick) env_int("RFF_TRAIN_DIM", 128L) else env_int("RFF_TRAIN_DIM", 256L),
     rff_chunk_size = env_int("RFF_CHUNK_SIZE", 2048L),
@@ -62,6 +66,9 @@ make_shared_cfg <- function() {
     m2_rho_max = 0.80,
     m2_g1_sd = 0.50,
     m2_g2_sd = 0.50,
+    m3_positions = c(-2, -1, -0.2, 1, 2),
+    m3_sds = rep(0.2, 5),
+    m3_base_amp = c(1, 0.3, 1.5, 0.3, 1),
     m3_peak_effect = 0.50,
     m3_peak_sdlog = 0.20,
     m4_nuisance_k = 3L,
@@ -89,5 +96,11 @@ validate_shared_cfg <- function(cfg) {
   if (cfg$rff_dim %% 2L != 0L || cfg$rff_train_dim %% 2L != 0L) stop("RFF dimensions must be even")
   if (length(cfg$cnn_spectral_caps) != 3L || any(cfg$cnn_spectral_caps <= 0)) stop("Need three positive spectral caps")
   if (!identical(cfg$noise_model, "multiplicative")) stop("Final simulations use multiplicative noise only")
+  if (!is.finite(cfg$shift_gap) || cfg$shift_gap < 0) stop("SHIFT_GAP must be finite and non-negative")
+  if (!is.finite(cfg$sigma_shift) || cfg$sigma_shift <= 0) stop("SIGMA_SHIFT must be finite and positive")
+  if (!is.finite(cfg$alpha_gap) || cfg$alpha_gap < 0) stop("ALPHA_GAP must be finite and non-negative")
+  if (!is.finite(cfg$alpha_sd) || cfg$alpha_sd <= 0) stop("ALPHA_SD must be finite and positive")
+  if (length(cfg$m3_positions) != 5L || length(cfg$m3_sds) != 5L || length(cfg$m3_base_amp) != 5L) stop("M3 requires five positions, widths, and baseline amplitudes")
+  if (any(!is.finite(cfg$m3_positions)) || any(!is.finite(cfg$m3_sds)) || any(!is.finite(cfg$m3_base_amp)) || any(cfg$m3_sds <= 0) || any(cfg$m3_base_amp <= 0)) stop("M3 parameters must be finite with positive widths and amplitudes")
   invisible(cfg)
 }

@@ -6,8 +6,6 @@ make_translation_cfg <- function(shared) {
   cfg$window <- env_num("WINDOW", 5.0)
   cfg$t <- seq(-cfg$window, cfg$window, length.out = cfg$p)
   cfg$dt <- cfg$t[2] - cfg$t[1]
-  cfg$shift_gap <- env_num("SHIFT_GAP", 1.0)
-  cfg$sigma_shift <- env_num("SIGMA_SHIFT", 0.8)
   cfg$gen_halo <- env_num("GEN_HALO", 3.0)
   cfg$cnn_channels <- env_int("CNN_CHANNELS", 8L)
   cfg$cnn_k <- c(11L, 7L, 5L)

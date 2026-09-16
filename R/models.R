@@ -19,7 +19,7 @@ make_aperiodic_templates <- function(cfg) {
 
 M3_POS <- c(-2, -1, -0.2, 1, 2)
 M3_SD <- rep(0.2, 5)
-M3_BASE_AMP <- c(1, 0.5, 1.5, 0.5, 1)
+M3_BASE_AMP <- c(1, 0.3, 1.5, 0.3, 1)
 
 sample_m1_class <- function(n, group, delta, cfg) {
   # This is the normalized version of the historical c(.4,.3,.2) weights.

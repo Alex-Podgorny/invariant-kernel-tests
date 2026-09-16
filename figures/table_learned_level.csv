@@ -1,0 +1,13 @@
+"Group","Model","rejection_rate","nrep"
+"Affine","M1",0.025,40
+"Affine","M2",0.05,40
+"Affine","M3",0.075,40
+"Affine","M4",0.05,40
+"Translation","M1",0.125,40
+"Translation","M2",0.025,40
+"Translation","M3",0.075,40
+"Translation","M4",0.05,40
+"Circle","M1",0.05,40
+"Circle","M2",0.1,40
+"Circle","M3",0.025,40
+"Circle","M4",0.025,40

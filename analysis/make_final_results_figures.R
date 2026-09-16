@@ -35,8 +35,7 @@ suppressPackageStartupMessages({
   library(dplyr)
 })
 
-# Resolve the project root from this file when invoked with Rscript, and otherwise
-# fall back to the current working directory (convenient for source() in RStudio).
+
 args0 <- commandArgs(trailingOnly = FALSE)
 file_arg <- sub("^--file=", "", args0[grep("^--file=", args0)])
 if (length(file_arg)) {
@@ -75,8 +74,7 @@ aff <- read_group(affine_file, "Affine")
 tra <- read_group(translation_file, "Translation")
 cir <- read_group(circle_file, "Circle")
 
-# Allow harmless additions of group-specific columns while enforcing the common
-# columns needed for the final figures.
+
 required_cols <- c(
   "scenario", "delta", "method", "S", "rejection_rate", "nrep",
   "mean_train_seconds", "median_train_seconds",
@@ -98,7 +96,6 @@ tra <- add_missing(tra, all_cols)
 cir <- add_missing(cir, all_cols)
 dat <- bind_rows(aff, tra, cir)
 
-# Only final-paper methods. These names are the ones written by the clean project.
 final_methods <- c(
   "Base-RFF",
   "Align-energy-median-RFF",
@@ -380,10 +377,6 @@ p_s_prob <- ggplot(
 save_plot(p_s_prob, "fig_S_probabilistic.pdf", 9.8, 8.5)
 
 # ---------- Runtime helpers ----------
-# In the clean project, every summary row contains a self-contained timing:
-#   total = train + eval.
-# Learned rows repeat the same one-time train cost for each S, which is exactly
-# what is needed for a cold end-to-end comparison at a chosen S.
 train_col <- if (runtime_stat == "median") "median_train_seconds" else "mean_train_seconds"
 eval_col  <- if (runtime_stat == "median") "median_eval_seconds"  else "mean_eval_seconds"
 total_col <- if (runtime_stat == "median") "median_total_seconds" else "mean_total_seconds"
@@ -399,9 +392,6 @@ main_runtime <- main |>
     total_seconds = .data[[total_col]]
   )
 
-# Average across model/delta cells after taking the requested per-cell timing
-# statistic. This preserves the old manuscript-level aggregation while making
-# each cell robust when RUNTIME_STAT=median.
 runtime_end_to_end <- main_runtime |>
   group_by(Group, Method) |>
   summarise(
@@ -453,7 +443,7 @@ p_runtime <- ggplot(
     labels = c("Learned: training", "Learned: evaluation"),
     name = NULL
   ) +
-  facet_wrap(~Group, nrow = 1, scales = "free_y") +
+  facet_wrap(~Group, nrow = 1, scales = "free_x") +
   labs(
     x = NULL,
     y = paste0(if (runtime_stat == "median") "Median" else "Mean", " end-to-end time (seconds)")

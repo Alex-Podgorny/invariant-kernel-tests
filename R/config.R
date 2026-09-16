@@ -38,8 +38,8 @@ make_shared_cfg <- function() {
     S_grid = as.integer(parse_num_vec(Sys.getenv("S_GRID", unset = ""), c(4, 8, 16, 32))),
     Bperm = if (quick) env_int("BPERM", 49L) else env_int("BPERM", 500L),
     alpha_test = env_num("ALPHA", 0.05),
-    shift_gap = env_num("SHIFT_GAP", 0.5),
-    sigma_shift = env_num("SIGMA_SHIFT", 0.8),
+    shift_gap = env_num("SHIFT_GAP", 0.5), #For R and S1
+    sigma_shift = env_num("SIGMA_SHIFT", 0.8), #For R and S1
     rff_dim = if (quick) env_int("RFF_DIM", 128L) else env_int("RFF_DIM", 256L),
     rff_train_dim = if (quick) env_int("RFF_TRAIN_DIM", 128L) else env_int("RFF_TRAIN_DIM", 256L),
     rff_chunk_size = env_int("RFF_CHUNK_SIZE", 2048L),

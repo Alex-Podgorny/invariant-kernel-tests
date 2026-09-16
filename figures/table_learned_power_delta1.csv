@@ -1,7 +1,7 @@
 "Group","Model","rejection_rate","nrep"
-"Affine","M1",0.55,40
-"Affine","M2",0.8,40
-"Affine","M3",0.525,40
+"Affine","M1",0.475,40
+"Affine","M2",0.9,40
+"Affine","M3",0.55,40
 "Affine","M4",0.1,40
 "Translation","M1",0.7,40
 "Translation","M2",0.575,40

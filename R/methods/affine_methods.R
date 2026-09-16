@@ -32,8 +32,8 @@ make_affine_cfg <- function(shared) {
   cfg <- shared
   cfg$p_obs <- env_int("P_OBS", 192L); cfg$obs_window <- env_num("OBS_WINDOW", 7.5)
   cfg$t_obs <- seq(-cfg$obs_window, cfg$obs_window, length.out = cfg$p_obs); cfg$dt <- cfg$t_obs[2] - cfg$t_obs[1]
-  cfg$nuisance_alpha_gap <- 0.24; cfg$nuisance_alpha_sd <- 0.10; cfg$nuisance_alpha_absmax <- 0.40
-  cfg$nuisance_b_gap <- 0.90; cfg$nuisance_b_sd <- 0.35; cfg$nuisance_b_absmax <- 1.60
+  cfg$nuisance_alpha_gap <- env_num("AFFINE_ALPHA_GAP", 0.1); cfg$nuisance_alpha_sd <- 0.10; cfg$nuisance_alpha_absmax <- 0.40
+  cfg$nuisance_b_gap <- env_num("AFFINE_B_GAP", 0.50); cfg$nuisance_b_sd <- 0.35; cfg$nuisance_b_absmax <- 1.60 
   cfg$canonical_target_sd <- 1.0; cfg$canonical_sd_floor <- 0.10
   cfg$wavelet_sd <- 0.45
   cfg$affine_alpha_max <- 0.45; cfg$affine_alpha_step <- 0.15

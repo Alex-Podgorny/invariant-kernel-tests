@@ -29,7 +29,7 @@ make_shared_cfg <- function() {
   quick <- env_bool("QUICK", FALSE)
   list(
     seed = env_int("SEED", 20260915L),
-    nrep = if (quick) env_int("NREP", 3L) else env_int("NREP", 500L),
+    nrep = if (quick) env_int("NREP", 3L) else env_int("NREP", 300L),
     cores = env_int("CORES", 1L),
     n_train = env_int("N_TRAIN", 20L),
     n_test = env_int("N_TEST", 40L),
